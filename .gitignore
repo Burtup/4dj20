@@ -9,6 +9,7 @@ data/
 venv/
 ENV/
 env/
+.env
 
 # Archivos de configuración local y cachés
 __pycache__/
