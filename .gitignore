@@ -1,0 +1,5 @@
+# Datos crudos del HIS: contienen información de pacientes (no subir)
+Datos/
+
+# Configuración local de herramientas
+.claude/
