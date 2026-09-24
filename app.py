@@ -1,0 +1,153 @@
+from pathlib import Path
+import pandas as pd
+import streamlit as st
+from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
+from langchain_ollama import ChatOllama
+
+# -----------------------------------------------------------------------------
+# 1. Configuración Inicial de Streamlit
+# -----------------------------------------------------------------------------
+st.set_page_config(
+    page_title="Asistente de Gestión Hospitalaria",
+    page_icon="🏥",
+    layout="wide"
+)
+
+st.title("Asistente de Gestión Hospitalaria")
+st.caption("Consulta conversacional sobre registros hospitalarios usando Llama 3.2 (Ollama).")
+
+# -----------------------------------------------------------------------------
+# 2. Carga de Archivos Parquet
+# -----------------------------------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent
+PROCESSED_DIR = BASE_DIR / "data" / "processed"
+
+
+@st.cache_data
+def load_datasets() -> dict[str, pd.DataFrame]:
+    datasets = {}
+    expected_files = [
+        "atencion",
+        "ingresos",
+        "medicamento_insumo",
+        "paciente",
+        "programacion_cirugia",
+        "servicios",
+        "triage"
+    ]
+
+    for file_name in expected_files:
+        file_path = PROCESSED_DIR / f"{file_name}.parquet"
+        if file_path.exists():
+            datasets[file_name] = pd.read_parquet(file_path)
+        else:
+            st.error(f"Archivo no encontrado: {file_path}")
+
+    return datasets
+
+
+datasets = load_datasets()
+
+# Panel lateral para inspección visual de las tablas
+with st.sidebar:
+    st.header("Bases de Datos Cargadas")
+    for name, df in datasets.items():
+        with st.expander(f"📊 {name} ({df.shape[0]} filas)"):
+            st.caption(f"Columnas: {', '.join(df.columns)}")
+            st.dataframe(df.head(2), use_container_width=True)
+
+
+# -----------------------------------------------------------------------------
+# 3. Inicialización del Agente Inteligente
+#  TODO: revisar parser de errores
+# -----------------------------------------------------------------------------
+@st.cache_resource
+def get_pandas_agent(dfs: dict[str, pd.DataFrame]):
+    llm = ChatOllama(
+        model="llama3.2",
+        temperature=0.0
+    )
+
+    # Mapeo explícito de dataframes para que el agente reconozca df1, df2... por nombre
+    df_list = [
+        dfs["ingresos"],
+        dfs["triage"],
+        dfs["atencion"],
+        dfs["paciente"],
+        dfs["servicios"],
+        dfs["medicamento_insumo"],
+        dfs["programacion_cirugia"]
+    ]
+
+    prefix_prompt = """
+    Trabajas con 7 DataFrames que contienen información hospitalaria:
+    - df1 (ingresos): Registros de ingreso, vía de ingreso (Urgencias, Ambulatorio), fechas de ingreso y hospitalización, cama, diagnóstico.
+    - df2 (triage): Clasificación y fechas de triage.
+    - df3 (atencion): Fechas y registros de atenciones médicas.
+    - df4 (paciente): Datos demográficos del paciente (edad, sexo, municipio, asegurador).
+    - df5 (servicios): Servicios prestados, especialidad, área, fecha de prestación.
+    - df6 (medicamento_insumo): Medicamentos e insumos entregados, cantidad, fecha.
+    - df7 (programacion_cirugia): Cirugías programadas por paciente y servicio.
+
+    SIEMPRE debes finalizar tu análisis escribiendo exactamente:
+    Final Answer: <tu respuesta detallada en español>
+    """
+
+    agent = create_pandas_dataframe_agent(
+        llm=llm,
+        df=df_list,
+        verbose=True,
+        allow_dangerous_code=True,  #Para activar script de ejecucion local
+        agent_type="zero-shot-react-description",
+        prefix=prefix_prompt,
+       # handle_parsing_errors=True,  POSIBLEMENTE DEPRECADO
+        agent_executor_kwargs={
+            "handle_parsing_errors": True,
+        }
+    )
+    return agent
+
+
+if datasets:
+    agent = get_pandas_agent(datasets)
+else:
+    st.stop()
+
+# -----------------------------------------------------------------------------
+# 4. Chat e Historial
+# -----------------------------------------------------------------------------
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "Hola. Puedo responder consultas sobre admisiones, triage, servicios, pacientes y medicamentos. ¿Qué deseas consultar?"
+        }
+    ]
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+if user_input := st.chat_input("Escribe tu consulta..."):
+
+    st.chat_message("user").markdown(user_input)
+    st.session_state.messages.append({"role": "user", "content": user_input})
+
+    with st.chat_message("assistant"):
+        with st.spinner("Analizando registros..."):
+            try:
+                # Ejecutar el agente
+                response = agent.invoke({"input": user_input})
+                output_text = response.get("output", str(response))
+
+                # Si el parser falló pero capturó la salida en el texto de error, limpiarla para el usuario
+                if "Could not parse LLM output:" in output_text:
+                    output_text = output_text.split("Could not parse LLM output:")[-1].strip(" `")
+
+                st.markdown(output_text)
+                st.session_state.messages.append({"role": "assistant", "content": output_text})
+
+            except Exception as e:
+                error_msg = f"Ocurrió un error al procesar la consulta: {str(e)}"
+                st.error(error_msg)
+                st.session_state.messages.append({"role": "assistant", "content": error_msg})
