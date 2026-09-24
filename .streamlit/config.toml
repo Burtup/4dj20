@@ -1,0 +1,58 @@
+# HospitalIQ theme — Hospital Susana López de Valencia brand.
+# Logo colors: navy #19205b · lime #74b722 · green #24732b · paper #f2f2f2.
+# Chart palettes were validated for color-vision deficiency (see README).
+
+[client]
+toolbarMode = "minimal"
+
+[theme]
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+codeFont = "JetBrains Mono:https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+baseFontSize = 14
+baseRadius = "0.6rem"
+buttonRadius = "0.6rem"
+showWidgetBorder = true
+showSidebarBorder = false
+metricValueFontWeight = 600
+
+# ── Light (default) ──────────────────────────────────────────────────────────
+[theme.light]
+primaryColor = "#24732b"
+backgroundColor = "#f2f2f2"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#19205b"
+linkColor = "#24732b"
+borderColor = "#dcdfea"
+dataframeHeaderBackgroundColor = "#eef0f6"
+greenColor = "#24732b"
+blueColor = "#3b47a8"
+chartCategoricalColors = ["#3b47a8", "#5c9a1b", "#8a4fc7", "#c0781a", "#0a8f86", "#d0506a"]
+chartSequentialColors = ["#f3f9ec", "#e2f1d0", "#cde6b0", "#b3d98c", "#96c966", "#7cb838", "#62992a", "#4a7a1f", "#355d17", "#23410f"]
+
+[theme.light.sidebar]
+backgroundColor = "#19205b"
+secondaryBackgroundColor = "#242c6e"
+textColor = "#e8ebf7"
+primaryColor = "#74b722"
+borderColor = "#343d83"
+
+# ── Dark ─────────────────────────────────────────────────────────────────────
+[theme.dark]
+primaryColor = "#74b722"
+backgroundColor = "#0d1028"
+secondaryBackgroundColor = "#151b3a"
+textColor = "#e6e8f5"
+linkColor = "#8fcd45"
+borderColor = "#262d55"
+dataframeHeaderBackgroundColor = "#1b2246"
+greenColor = "#74b722"
+blueColor = "#6f7bd8"
+chartCategoricalColors = ["#6f7bd8", "#6aa82a", "#a070e0", "#c28226", "#1a9e94", "#dd5f7a"]
+chartSequentialColors = ["#172312", "#1f3316", "#29451a", "#34581d", "#416c21", "#4f8126", "#61972c", "#77ad37", "#90c34c", "#b0d975"]
+
+[theme.dark.sidebar]
+backgroundColor = "#090b1e"
+secondaryBackgroundColor = "#141a38"
+textColor = "#e6e8f5"
+primaryColor = "#74b722"
+borderColor = "#20274d"
