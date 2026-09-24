@@ -1,0 +1,95 @@
+{
+  "paciente": {
+    "descripcion": "Tabla principal con la información demográfica y de afiliación de los pacientes.",
+    "campos": [
+      {"campo": "tipo_documento", "tipo": "texto", "longitud_max": 3, "acepta_nulos": false, "clave": null, "descripcion": "Tipo de documento de identidad del paciente (CC, TI, CE, RC, PA, etc.)."},
+      {"campo": "id_paciente", "tipo": "entero", "longitud_max": 6, "acepta_nulos": false, "clave": "PK", "descripcion": "Identificador único del paciente."},
+      {"campo": "nombre_paciente", "tipo": "texto", "longitud_max": 3, "acepta_nulos": false, "clave": null, "descripcion": "Iniciales o nombre anonimizado del paciente."},
+      {"campo": "fecha_nacimiento", "tipo": "fecha", "longitud_max": 10, "acepta_nulos": false, "clave": null, "descripcion": "Fecha de nacimiento del paciente."},
+      {"campo": "sexo", "tipo": "texto", "longitud_max": 9, "acepta_nulos": false, "clave": null, "descripcion": "Sexo biológico del paciente (Masculino / Femenino)."},
+      {"campo": "asegurador", "tipo": "texto", "longitud_max": 148, "acepta_nulos": false, "clave": null, "descripcion": "Entidad aseguradora (EPS/ARL) a la que está afiliado el paciente."},
+      {"campo": "regimen", "tipo": "texto", "longitud_max": 12, "acepta_nulos": false, "clave": null, "descripcion": "Régimen de afiliación al sistema de salud."},
+      {"campo": "departamento", "tipo": "texto", "longitud_max": 18, "acepta_nulos": false, "clave": null, "descripcion": "Departamento de residencia del paciente."},
+      {"campo": "municipio", "tipo": "texto", "longitud_max": 29, "acepta_nulos": false, "clave": null, "descripcion": "Municipio de residencia del paciente."},
+      {"campo": "zona", "tipo": "texto", "longitud_max": 6, "acepta_nulos": false, "clave": null, "descripcion": "Zona de residencia (Urbana / Rural)."}
+    ]
+  },
+  "ingresos": {
+    "descripcion": "Registro de episodios de admisión y hospitalización.",
+    "campos": [
+      {"campo": "oid_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": false, "clave": "PK", "descripcion": "Identificador único de la admisión o episodio de atención."},
+      {"campo": "consecutivo_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": false, "clave": null, "descripcion": "Número consecutivo interno asignado a la admisión."},
+      {"campo": "id_paciente", "tipo": "entero", "longitud_max": 6, "acepta_nulos": false, "clave": "FK → Paciente", "descripcion": "Paciente al que corresponde la admisión."},
+      {"campo": "clase_ingreso", "tipo": "texto", "longitud_max": 12, "acepta_nulos": false, "clave": null, "descripcion": "Clase de ingreso (Ambulatorio u Hospitalario)."},
+      {"campo": "via_ingreso", "tipo": "texto", "longitud_max": 20, "acepta_nulos": false, "clave": null, "descripcion": "Vía por la que el paciente ingresó a la institución."},
+      {"campo": "tipo_riesgo", "tipo": "texto", "longitud_max": 37, "acepta_nulos": false, "clave": null, "descripcion": "Tipo de riesgo u origen del evento que motivó el ingreso."},
+      {"campo": "fecha_ingreso", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": false, "clave": null, "descripcion": "Fecha y hora en que se registró el ingreso."},
+      {"campo": "fecha_hospitalizacion", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": true, "clave": null, "descripcion": "Fecha y hora en que se efectuó la hospitalización."},
+      {"campo": "oid_triage_a", "tipo": "entero", "longitud_max": 7, "acepta_nulos": true, "clave": "FK → Triage", "descripcion": "Evento de triage asociado a la admisión."},
+      {"campo": "codigo_cama", "tipo": "texto", "longitud_max": 8, "acepta_nulos": false, "clave": null, "descripcion": "Código de la cama asignada."},
+      {"campo": "nombre_cama", "tipo": "texto", "longitud_max": 50, "acepta_nulos": false, "clave": null, "descripcion": "Nombre o descripción de la cama."},
+      {"campo": "nombre_grupo_cama", "tipo": "texto", "longitud_max": 28, "acepta_nulos": false, "clave": null, "descripcion": "Grupo de camas al que pertenece la cama asignada."},
+      {"campo": "nombre_subgrupo_cama", "tipo": "texto", "longitud_max": 39, "acepta_nulos": false, "clave": null, "descripcion": "Subgrupo de camas al que pertenece la cama asignada."},
+      {"campo": "codigo_diagnostico", "tipo": "texto", "longitud_max": 4, "acepta_nulos": true, "clave": null, "descripcion": "Código CIE-10 del diagnóstico principal."},
+      {"campo": "nombre_diagnostico", "tipo": "texto", "longitud_max": 173, "acepta_nulos": true, "clave": null, "descripcion": "Descripción del diagnóstico principal."}
+    ]
+  },
+  "triage": {
+    "descripcion": "Evaluación inicial de urgencias y constantes vitales.",
+    "campos": [
+      {"campo": "oid_triage", "tipo": "entero", "longitud_max": 7, "acepta_nulos": true, "clave": "PK", "descripcion": "Identificador único del evento de triage."},
+      {"campo": "fecha_triage", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": true, "clave": null, "descripcion": "Fecha y hora en que se realizó el triage."},
+      {"campo": "motivo_consulta", "tipo": "texto", "longitud_max": 2564, "acepta_nulos": true, "clave": null, "descripcion": "Descripción del motivo de consulta registrado en el triage."},
+      {"campo": "tension_arterial", "tipo": "texto", "longitud_max": 8, "acepta_nulos": true, "clave": null, "descripcion": "Tensión arterial del paciente al momento del triage."},
+      {"campo": "frecuencia_cardiaca", "tipo": "texto", "longitud_max": 4, "acepta_nulos": true, "clave": null, "descripcion": "Frecuencia cardiaca del paciente, en latidos por minuto."},
+      {"campo": "frecuencia_respiratoria", "tipo": "texto", "longitud_max": 4, "acepta_nulos": true, "clave": null, "descripcion": "Frecuencia respiratoria del paciente, en respiraciones por minuto."},
+      {"campo": "temperatura", "tipo": "texto", "longitud_max": 5, "acepta_nulos": true, "clave": null, "descripcion": "Temperatura corporal del paciente, en grados Celsius."},
+      {"campo": "id_paciente", "tipo": "entero", "longitud_max": 6, "acepta_nulos": true, "clave": "FK → Paciente", "descripcion": "Paciente al que corresponde el triage."},
+      {"campo": "codigo_triage", "tipo": "texto", "longitud_max": 2, "acepta_nulos": true, "clave": null, "descripcion": "Código de la categoría de clasificación de triage."},
+      {"campo": "clasificacion_triage", "tipo": "texto", "longitud_max": 58, "acepta_nulos": true, "clave": null, "descripcion": "Descripción de la clasificación o prioridad asignada en el triage."}
+    ]
+  },
+  "atencion": {
+    "descripcion": "Marca de tiempo de la primera atención médica del episodio.",
+    "campos": [
+      {"campo": "oid_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": false, "clave": "PK, FK → Ingresos", "descripcion": "Admisión a la que corresponde el registro de atención."},
+      {"campo": "fecha_atencion", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": false, "clave": null, "descripcion": "Fecha y hora de la primera atención médica."}
+    ]
+  },
+  "servicios": {
+    "descripcion": "Procedimientos y consultas médicas asistenciales prestadas.",
+    "campos": [
+      {"campo": "oid_s", "tipo": "entero", "longitud_max": 6, "acepta_nulos": false, "clave": "PK", "descripcion": "Identificador único de la línea de servicio prestado."},
+      {"campo": "oid_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": false, "clave": "FK → Ingresos", "descripcion": "Admisión a la que pertenece el servicio."},
+      {"campo": "codigo_servicio", "tipo": "texto", "longitud_max": 10, "acepta_nulos": false, "clave": null, "descripcion": "Código del servicio o procedimiento (CUPS)."},
+      {"campo": "nombre_servicio", "tipo": "texto", "longitud_max": 252, "acepta_nulos": false, "clave": null, "descripcion": "Descripción del servicio o procedimiento."},
+      {"campo": "cantidad", "tipo": "entero", "longitud_max": 3, "acepta_nulos": false, "clave": null, "descripcion": "Cantidad de unidades del servicio prestadas."},
+      {"campo": "fecha_prestacion", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": false, "clave": null, "descripcion": "Fecha y hora en que se prestó el servicio."},
+      {"campo": "codigo_area_servicio", "tipo": "texto", "longitud_max": 5, "acepta_nulos": false, "clave": null, "descripcion": "Código del área hospitalaria que prestó el servicio."},
+      {"campo": "area_servicio", "tipo": "texto", "longitud_max": 65, "acepta_nulos": false, "clave": null, "descripcion": "Nombre del área hospitalaria que prestó el servicio."},
+      {"campo": "especialidad", "tipo": "texto", "longitud_max": 36, "acepta_nulos": false, "clave": null, "descripcion": "Especialidad médica que ordenó el servicio."}
+    ]
+  },
+  "medicamento_insumo": {
+    "descripcion": "Registro de insumos y medicamentos dispensados.",
+    "campos": [
+      {"campo": "oid_mi", "tipo": "entero", "longitud_max": 6, "acepta_nulos": false, "clave": "PK", "descripcion": "Identificador único de la línea de medicamento o insumo dispensado."},
+      {"campo": "oid_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": false, "clave": "FK → Ingresos", "descripcion": "Admisión a la que pertenece el consumo."},
+      {"campo": "codigo_servicio", "tipo": "texto", "longitud_max": 15, "acepta_nulos": false, "clave": null, "descripcion": "Código del medicamento o insumo dispensado."},
+      {"campo": "nombre_servicio", "tipo": "texto", "longitud_max": 300, "acepta_nulos": false, "clave": null, "descripcion": "Descripción del medicamento o insumo dispensado."},
+      {"campo": "cantidad", "tipo": "entero", "longitud_max": 5, "acepta_nulos": false, "clave": null, "descripcion": "Cantidad dispensada."},
+      {"campo": "fecha_prestacion", "tipo": "fecha/hora", "longitud_max": 19, "acepta_nulos": false, "clave": null, "descripcion": "Fecha y hora en que se dispensó el medicamento o insumo."},
+      {"campo": "area_servicio", "tipo": "texto", "longitud_max": 58, "acepta_nulos": false, "clave": null, "descripcion": "Área que realizó la dispensación (farmacia, UCI, etc.)."},
+      {"campo": "especialidad", "tipo": "texto", "longitud_max": 36, "acepta_nulos": false, "clave": null, "descripcion": "Especialidad médica que prescribió el medicamento o insumo."}
+    ]
+  },
+  "programacion_cirugia": {
+    "descripcion": "Agrupador y detalle de cirugías e intervenciones programadas.",
+    "campos": [
+      {"campo": "consecutivo_programacion", "tipo": "texto", "longitud_max": 20, "acepta_nulos": false, "clave": null, "descripcion": "Número de la programación quirúrgica; agrupa los servicios de una misma cirugía."},
+      {"campo": "id_paciente", "tipo": "entero", "longitud_max": 6, "acepta_nulos": false, "clave": "FK → Paciente", "descripcion": "Paciente para quien se programó la cirugía."},
+      {"campo": "oid_ingreso", "tipo": "entero", "longitud_max": 7, "acepta_nulos": true, "clave": "FK → Ingresos", "descripcion": "Admisión asociada a la cirugía programada."},
+      {"campo": "codigo_servicio", "tipo": "texto", "longitud_max": 6, "acepta_nulos": false, "clave": null, "descripcion": "Código del servicio quirúrgico programado."}
+    ]
+  }
+}
