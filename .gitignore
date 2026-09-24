@@ -3,3 +3,30 @@ Datos/
 
 # Configuración local de herramientas
 .claude/
+
+# Archivos de datos sensibles y procesados
+data/
+*.parquet
+*.csv
+*.xlsx
+
+# Entorno virtual de Python
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Archivos de configuración local y cachés
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.streamlit/secrets.toml
+
+# Archivos de configuración de IDEs (PyCharm / VSCode)
+.idea/
+.vscode/
+
+# Logs
+*.log
