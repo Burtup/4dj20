@@ -10,6 +10,12 @@ venv/
 ENV/
 env/
 
+# Credenciales y base operativa (registros clínicos + auditoría)
+.env
+*.db
+*.db-wal
+*.db-shm
+
 # Archivos de configuración local y cachés
 __pycache__/
 *.py[cod]
